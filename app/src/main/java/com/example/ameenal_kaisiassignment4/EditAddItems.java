@@ -1,23 +1,18 @@
 package com.example.ameenal_kaisiassignment4;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
-public class AddItems extends AppCompatActivity {
+public class EditAddItems extends AppCompatActivity {
     /*Button add_item_btn;
     EditText add_item_text;
     ListView items_listview;
@@ -31,34 +26,53 @@ public class AddItems extends AppCompatActivity {
     int longclicked_item_index = -1;
      */
 
-    Button addButton;
+    Button editAddButton;
     EditText itemTextView;
+    TextView labelTextView;
     ArrayList<String> items;
 
+    String mode;
+    int index;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_items);
+        setContentView(R.layout.activity_edit_add_items);
 
-        addButton = findViewById(R.id.addButton);
+        editAddButton = findViewById(R.id.editAddButton);
         itemTextView = findViewById(R.id.taskTextView);
+        labelTextView = findViewById(R.id.inputLabel);
 
         items = FileHandler.readData(this);
 
-        addButton.setOnClickListener(view -> {
+        mode = getIntent().getStringExtra("mode");
+        index = -1;
+        if(mode.equals("edit")) {
+            labelTextView.setText("Edit Task");
+            editAddButton.setText("UPDATE THE LIST");
+
+            index = getIntent().getIntExtra("index", -1);
+            itemTextView.setText(items.get(index));
+        } // else we use the default values set in the layout
+
+        editAddButton.setOnClickListener(view -> {
             String newItemName = itemTextView.getText().toString();
             itemTextView.setText("");
 
             if(newItemName.isEmpty()) {
-                Snackbar.make(itemTextView, "Cannot add empty item!",
+                Snackbar.make(itemTextView, (index == -1 ? "Cannot add empty item!" : "Cannot" +
+                                "edit into an empty item!"),
                         Snackbar.LENGTH_LONG)
                         .setAction("X", another_view -> {
 
                         }).setBackgroundTint(Color.BLACK).setTextColor(Color.WHITE)
                         .show();
             } else {
-                items.add(newItemName);
-                FileHandler.writeData(AddItems.this, items);
+                if(index == -1)
+                    items.add(newItemName);
+                else
+                    items.set(index, newItemName);
+                FileHandler.writeData(EditAddItems.this, items);
+
                 finish();
             }
         });

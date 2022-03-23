@@ -28,11 +28,23 @@ public class ViewItems extends AppCompatActivity {
         itemsListView = findViewById(R.id.itemsListView);
 
         addItemsButton.setOnClickListener(view -> {
-            Intent addItemsIntent = new Intent(this, AddItems.class);
+            Intent addItemsIntent = new Intent(ViewItems.this, EditAddItems.class);
+            //q5
+            addItemsIntent.putExtra("mode", "add");
             startActivity(addItemsIntent);
         });
 
-        itemsListView.setOnItemClickListener( ((adapterView, view, i, l) -> {
+        //q5
+        itemsListView.setOnItemLongClickListener( (adapterView, view, i, l) -> {
+            Intent editItemsIntent = new Intent(ViewItems.this, EditAddItems.class);
+            editItemsIntent.putExtra("mode", "edit");
+            editItemsIntent.putExtra("index", i);
+            startActivity(editItemsIntent);
+
+            return true;
+        });
+
+        itemsListView.setOnItemClickListener( (adapterView, view, i, l) -> {
             AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ViewItems.this);
             alertBuilder.setTitle("Deletion")
                     .setMessage("Do you want to delete?")
@@ -44,7 +56,7 @@ public class ViewItems extends AppCompatActivity {
                         FileHandler.writeData(ViewItems.this, items);
                     })
                     .create().show();
-        }));
+        });
 
         items = FileHandler.readData(this);
 
