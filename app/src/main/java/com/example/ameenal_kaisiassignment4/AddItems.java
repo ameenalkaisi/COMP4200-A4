@@ -15,10 +15,9 @@ import android.widget.ListView;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.io.File;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class AddItems extends AppCompatActivity {
     Button add_item_btn;
     EditText add_item_text;
     ListView items_listview;
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_add_items);
 
         add_item_btn = findViewById(R.id.add_item_btn);
         add_item_text = findViewById(R.id.add_item_text);
@@ -75,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         listview_onItemClickListener = new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(AddItems.this);
                 alertBuilder.setTitle("Deletion")
                         .setMessage("Do you want to delete?")
                         .setCancelable(false)
@@ -83,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButton("Yes", (dialog_interface, k) -> {
                             items.remove(i);
                             items_adapter.notifyDataSetChanged();
-                            FileHandler.writeData(MainActivity.this, items);
+                            FileHandler.writeData(AddItems.this, items);
                         })
                         .create().show();
             }
