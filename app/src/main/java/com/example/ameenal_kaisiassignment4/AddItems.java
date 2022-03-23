@@ -18,7 +18,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 
 public class AddItems extends AppCompatActivity {
-    Button add_item_btn;
+    /*Button add_item_btn;
     EditText add_item_text;
     ListView items_listview;
 
@@ -29,12 +29,41 @@ public class AddItems extends AppCompatActivity {
     AdapterView.OnItemClickListener listview_onItemClickListener;
 
     int longclicked_item_index = -1;
+     */
+
+    Button addButton;
+    EditText itemTextView;
+    ArrayList<String> items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_items);
 
+        addButton = findViewById(R.id.addButton);
+        itemTextView = findViewById(R.id.taskTextView);
+
+        items = FileHandler.readData(this);
+
+        addButton.setOnClickListener(view -> {
+            String newItemName = itemTextView.getText().toString();
+            itemTextView.setText("");
+
+            if(newItemName.isEmpty()) {
+                Snackbar.make(itemTextView, "Cannot add empty item!",
+                        Snackbar.LENGTH_LONG)
+                        .setAction("X", another_view -> {
+
+                        }).setBackgroundTint(Color.BLACK).setTextColor(Color.WHITE)
+                        .show();
+            } else {
+                items.add(newItemName);
+                FileHandler.writeData(AddItems.this, items);
+                finish();
+            }
+        });
+
+        /*
         add_item_btn = findViewById(R.id.add_item_btn);
         add_item_text = findViewById(R.id.add_item_text);
         items_listview = findViewById(R.id.items_listview);
@@ -134,6 +163,6 @@ public class AddItems extends AppCompatActivity {
                     items_listview.setOnItemClickListener(listview_onItemClickListener);
                 }
             }
-        };
+        }; */
     }
 }
