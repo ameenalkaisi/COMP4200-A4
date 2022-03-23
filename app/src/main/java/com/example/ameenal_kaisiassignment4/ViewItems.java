@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -30,6 +31,20 @@ public class ViewItems extends AppCompatActivity {
             Intent addItemsIntent = new Intent(this, AddItems.class);
             startActivity(addItemsIntent);
         });
+
+        itemsListView.setOnItemClickListener( ((adapterView, view, i, l) -> {
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ViewItems.this);
+            alertBuilder.setTitle("Deletion")
+                    .setMessage("Do you want to delete?")
+                    .setCancelable(false)
+                    .setNegativeButton("No", (dialog_interface, k) -> {})
+                    .setPositiveButton("Yes", (dialog_interface, k) -> {
+                        itemsAdapter.remove(items.remove(i));
+                        itemsAdapter.notifyDataSetChanged();
+                        FileHandler.writeData(ViewItems.this, items);
+                    })
+                    .create().show();
+        }));
 
         items = FileHandler.readData(this);
 
